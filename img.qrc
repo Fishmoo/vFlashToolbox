@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/icon">
+        <file>Resources/icon/clear.png</file>
+        <file>Resources/icon/pause.png</file>
+        <file>Resources/icon/save.png</file>
+        <file>Resources/icon/start.png</file>
+        <file>Resources/icon/download.png</file>
+        <file>Resources/icon/flow.png</file>
+        <file>Resources/icon/connect.png</file>
+        <file>Resources/icon/status_err.png</file>
+        <file>Resources/icon/status_ok.png</file>
+        <file>Resources/icon/disconnect.png</file>
+        <file>Resources/icon/filter.png</file>
+        <file>Resources/icon/remove.png</file>
+    </qresource>
+    <qresource prefix="/msg">
+        <file>Resources/mail.png</file>
+        <file>Resources/mail_g.png</file>
+    </qresource>
+</RCC>
