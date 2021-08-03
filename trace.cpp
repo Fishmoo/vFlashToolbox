@@ -4,19 +4,23 @@ trace::trace(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::trace),
     totalRow(0),
-    currentRow(0)
+    currentRow(0),
+    mIsTracing(false)
 {
     ui->setupUi(this);
 
     this->msgIcon.addPixmap(QPixmap(":/msg/Resources/mail.png"));
 
+    mTrace = new QList<meassage>;
+
     // 设置trace 行表头 & 列数
     QStringList headerText;
-    headerText <<"Time" << "Dir" << "ID" << "Length" << "Data";
+    headerText <<"Time" << "Dir" << "ID" << "Len" << "Data";
     ui->tableWidget->setColumnCount(headerText.count());
 
     QTableWidgetItem *headerItem;
-    for (int i=0; i<ui->tableWidget->columnCount(); i++)
+    QSize itemSize;
+    for (int i=0; i<ui->tableWidget->columnCount(); ++i)
     {
         headerItem = new QTableWidgetItem(headerText.at(i));
         QFont font = headerItem->font();        //获取原有字体设置
@@ -25,6 +29,12 @@ trace::trace(QWidget *parent) :
         headerItem->setTextColor(Qt::blue);     //字体颜色
         headerItem->setFont(font);              //设置字体
         headerItem->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+        itemSize = headerItem->sizeHint();
+//        if (headerText.at(i) == "Dir") {
+//            itemSize.setWidth(3);
+//            headerItem->setSizeHint(itemSize);
+//        }
+
         ui->tableWidget->setHorizontalHeaderItem(i, headerItem); //设置表头单元格的Item
     }
 
@@ -46,16 +56,39 @@ trace::trace(QWidget *parent) :
 
 trace::~trace()
 {
+    delete mTrace;
     delete ui;
 }
 /****************[public members - interface]***********************************************************/
 
 /****************[public members - slots]***************************************************************/
-void trace::on_RxTxMessage()
+void trace::on_RxTxMessage(QQueue<meassage> *pMsgQue)
 {
     traceItemType item;
+    meassage msg;
+    while (!pMsgQue->isEmpty()) {
+        msg = pMsgQue->dequeue();
+        //todo: 条件测试用
+        item.Id   = msg.Id;
+        item.Dlc  = msg.length;
+        item.time = msg.timeStamp;
+        item.Dir  = (msg.dir == meassage::DIR_TX) ? "Tx" : "Rx";
+        memcpy(item.msgData, msg.data, msg.length);
+        createItemsARow(currentRow, &item);
+        mTrace->append(msg);
+    }
+    //todo: test code to be delete!
+#if (0)
+    traceItemType item;
     createItemsARow(currentRow, &item);
+#endif
 }
+
+//void trace::on_RxTxMessage()
+//{
+//    traceItemType item;
+//    createItemsARow(currentRow, &item);
+//}
 
 void trace::on_ClearMessage()
 {
@@ -66,6 +99,9 @@ void trace::on_ClearMessage()
     while (rowIdx-- > 0) {
         removeItemsARow(rowIdx);
     }
+
+    /* Clear the buffer of the trace.*/
+    mTrace->clear();
 }
 
 void trace::on_SaveMessage()
@@ -105,6 +141,15 @@ void trace::createItemsARow(int currentRow, traceItemType* p_TraceItem)
     font.setPointSize(6);           //字体大小
     p_item->setFont(font);          //设置字体
     ui->tableWidget->setItem(currentRow, 0, p_item);
+    ui->tableWidget->setItem(currentRow, 1, new QTableWidgetItem(QString("%2").arg(p_TraceItem->time,10,10,QLatin1Char(' '))));
+    ui->tableWidget->setItem(currentRow, 2, new QTableWidgetItem(QString("0x%2").arg(p_TraceItem->Id,3,16,QLatin1Char('0'))));
+    ui->tableWidget->setItem(currentRow, 3, new QTableWidgetItem(p_TraceItem->Dir));
+
+    QString dataBytes;
+    for (int i = 0; i < 8; ++i) {
+        dataBytes.append(QString("%2  ").arg(p_TraceItem->msgData[i], 2, 16, QLatin1Char('0')).toUpper());
+    }
+    ui->tableWidget->setItem(currentRow, 4, new QTableWidgetItem(dataBytes));
 
     // 滚动到最新行
     ui->tableWidget->scrollToBottom();

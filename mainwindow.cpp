@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->gridLayout_trace->addWidget(this->traceWidget);
 
     this->tickTimer = new QTimer;
-    connect(this->tickTimer, SIGNAL(timeout()), this->traceWidget, SLOT(on_RxTxMessage()));
+//    connect(this->tickTimer, SIGNAL(timeout()), this->traceWidget, SLOT(on_RxTxMessage()));
     connect(this->ui->pushBtn_Flash, SIGNAL(clicked(bool)), this, SLOT(on_pushButton_flash()));
     connect(this->ui->toolBtn_ComCtrl, &QToolButton::clicked,
             this, &MainWindow::on_toolButton_simuCtrl);
@@ -26,10 +26,26 @@ MainWindow::MainWindow(QWidget *parent)
     this->pComM = new ComM();
     connect(this, &MainWindow::ComControl,
             this->pComM, &ComM::on_ComControl);
+//    connect(pComM->m_pSimulator, &zlCAN::RxIndication,
+//            this->traceWidget, &trace::on_RxTxMessage);
+
+    mTraceThread = new QThread();
+    this->traceWidget->moveToThread(mTraceThread);
+    connect(mTraceThread, &QThread::finished, this->traceWidget, &trace::deleteLater);
+    connect(mTraceThread, &QThread::finished, mTraceThread, &QObject::deleteLater);
+    connect(pComM->m_pSimulator, &zlCAN::RxIndication,
+                this->traceWidget, &trace::on_RxTxMessage);
+    connect(pComM->m_pSimulator, &zlCAN::TxConfirmation,
+                this->traceWidget, &trace::on_RxTxMessage);
+
+    /* 启动线程.*/
+    mTraceThread->start();
 }
 
 MainWindow::~MainWindow()
 {
+    mTraceThread->quit();
+    mTraceThread->wait();
     delete ui;
 }
 

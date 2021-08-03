@@ -46,15 +46,18 @@ signals:
 
     void openSimulator();
     void closeSimulator();
+public:
+    simulator   *m_pSimulator;
 
 private:
     ComMode     m_ComRequested;
     ComMode     m_ComMode;
     bool        m_isComActive;
-    simulator   *m_pSimulator;
+
 
     Com         *m_pComWorker;
     QThread     m_ComThread;
+//    QThread     m_SimThread;
 
     void createComThread();
     void destroyComThread();

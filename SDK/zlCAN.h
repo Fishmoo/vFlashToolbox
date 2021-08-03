@@ -8,6 +8,12 @@
 #include <QQueue>
 
 /**
+ * USBCAN-2A/C
+ * CANalyst-II
+ */
+#define ZL_VCI_USBCAN2              (4)
+
+/**
  * @brief The zlCAN class is used to realize the ZLG CAN board.
  */
 class zlCAN : public simulator
@@ -17,19 +23,26 @@ public:
     virtual ~zlCAN();
 
 public:
-    virtual lldStatus   loadDriver();
-    virtual lldStatus   unloadDriver();
+    lldStatus   loadDriver() override;
+    lldStatus   unloadDriver() override;
+
+    void        doComTask() override;
 
     /* Simulator control.*/
-    virtual lldStatus   connect();
-    virtual void        disconnect();
-    virtual lldStatus   readSimDeviceInfo();
+    lldStatus   connect() override;
+    void        disconnect() override;
+    lldStatus   readSimDeviceInfo() override;
 
     /* CAN.*/
-    virtual lldStatus   CAN_Init();
-    virtual lldStatus   CAN_Transmit();
-    virtual lldStatus   CAN_Receive();
-    virtual void        setCanBaudrate(const CanBaudrate_t speed, void* param2Set);
+    lldStatus   CAN_Init() override;
+    lldStatus   CAN_Transmit(PduIdType TxPduId, const PduInfoType* PduInfoPtr) override;
+    lldStatus   CAN_Receive() override;
+    void        setCanBaudrate(const CanBaudrate_t speed, void* param2Set) override;
+    void        RxConvertion(void *Hrh, int size) override;
+    void        TxConvertion(void *Hth, int size) override;
+
+public:
+    void run() override;
 
 private:
     pVCI_OpenDevice     pOpenDev        = nullptr;
@@ -46,11 +59,15 @@ private:
     pVCI_UsbDeviceReset pUsbDevReset    = nullptr;
     pVCI_FindUsbDevice2 pSearchUsbDev   = nullptr;
 
+    int                 mDevType;
+    int                 mDevIdx;
+    int                 mCanIdx;
     VCI_BOARD_INFO      mDeviceInfo;
     VCI_INIT_CONFIG     mDeviceInitCfg;
-
+    VCI_CAN_OBJ         mHth2Txd;
+    VCI_CAN_OBJ         mHrh4Rxd[1000];
     QQueue<VCI_CAN_OBJ> *pTxMailbox;
-    QVector<VCI_CAN_OBJ> *pRxMailbox;
+    QQueue<VCI_CAN_OBJ> *pRxMailbox;
 };
 
 #endif // ZLCAN_H

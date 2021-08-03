@@ -9,7 +9,7 @@ ComM::ComM(QObject *parent) :
     m_ComRequested = NO_COM;
     m_ComMode      = NO_COM;
 
-    m_pSimulator   = new zlCAN();
+    m_pSimulator   = new zlCAN();    
 }
 
 ComM::~ComM()
@@ -35,6 +35,8 @@ void ComM::on_ComControl(bool isActiveCom)
             createComThread();
             emit startCom();
             m_isComActive = true;
+
+            m_pSimulator->start();
         } else {
             // todo: 弹窗
         }
@@ -72,7 +74,7 @@ void ComM::createComThread()
         m_pComWorker = new Com(nullptr);
         m_pComWorker->moveToThread(&m_ComThread);
         connect(&m_ComThread, &QThread::finished, m_pComWorker, &Com::deleteLater);
-        /* 如果工作线程分配到堆上,自杀QThread线程用.*/
+        /* 如果工作线程分配到堆上, 自杀QThread线程用.*/
 #if (COMM_THREAD_CREATE_POS == COMM_THREAD_IN_HEAP)
         connect(m_pComThread, &QThread::finished, m_pComThread, &QObject::deleteLater);
 #endif

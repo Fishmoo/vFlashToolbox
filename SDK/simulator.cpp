@@ -4,13 +4,16 @@
 #include "ControlCAN.h"
 
 simulator::simulator(const QString &dllName) :
-    m_cmdRequested(SIMU_CMD_STOP),
-    m_simuOpState(SIMU_OFFLINE),
     m_isLoadDllSuccess(false),
-    m_isOnline(false)
+    m_isOnline(false),
+    m_cmdRequested(SIMU_CMD_STOP),
+    m_simuOpState(SIMU_OFFLINE)
 {
     /* load library.*/
-    m_pSimDll = new QLibrary(dllName);
+    m_pSimDll     = new QLibrary(dllName);
+
+    m_pMsgRxQueue = new QQueue<meassage>;
+    m_pMsgTxQueue = new QQueue<meassage>;
 }
 
 simulator::~simulator()
@@ -18,6 +21,9 @@ simulator::~simulator()
     if (m_pSimDll) {
         delete m_pSimDll;
     }
+
+    delete m_pMsgRxQueue;
+    delete m_pMsgTxQueue;
 }
 
 bool simulator::isOnline() const

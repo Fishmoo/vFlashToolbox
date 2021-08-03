@@ -6,6 +6,10 @@ Com::Com(QObject *parent) : QObject(parent)
     m_pCanTp = new Tp(Tp::TP_ADDR_NORMAL);
 }
 
+Com::~Com()
+{
+    delete m_pCanTp;
+}
 
 void Com::on_startCom()
 {

@@ -6,6 +6,7 @@
 #include <QTimer>
 #include "./SDK/simulator.h"
 #include "ComStack/ComM.h"
+#include <QThread>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -30,6 +31,7 @@ private:
     Ui::MainWindow *ui;
 
     trace   *traceWidget;
+    QThread *mTraceThread;
     QTimer* tickTimer;
     bool    isRunning;
 

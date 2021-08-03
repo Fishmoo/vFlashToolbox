@@ -5,6 +5,9 @@
 #include <QWidget>
 #include <QFont>
 #include <QIcon>
+#include "msg.h"
+#include <QQueue>
+#include <QList>
 
 namespace Ui {
 class trace;
@@ -25,7 +28,8 @@ public:
         QString     Dir;
         quint32     Id;
         quint32     Dlc;
-        QString     msgData;
+//        QString     msgData;
+        quint8      msgData[8];
     } traceItemType;
 
 public:
@@ -40,7 +44,8 @@ public slots:
     void on_toolBtn_control();
     void on_toolBtn_scroll();
     void on_ClearMessage();
-    void on_RxTxMessage();
+//    void on_RxTxMessage();      //for test
+    void on_RxTxMessage(QQueue<meassage> *pMsgQue);
 
 
 private:
@@ -50,6 +55,10 @@ private:
     int        currentRow;
     QFont      contentRowFont;
     QIcon      msgIcon;
+    bool       mIsTracing;
+
+    /* Trace data buffer.*/
+    QList<meassage> *mTrace;
 };
 
 #endif // TRACE_H

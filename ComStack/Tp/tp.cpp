@@ -112,7 +112,7 @@ void Tp::Tp_TxChannelHandler(t_tpTxInfo &tpTxChannel)
     /* 打印结果.*/
 //    qDebug() << tpTxChannel.state;
     if (b_print_req) {
-    qDebug("%2x %2x %2x %2x %2x %2x %2x %2x\n", txBuff[0],txBuff[1],txBuff[2],txBuff[3],
+    qDebug("%2x %2x %2x %2x %2x %2x %2x %2x", txBuff[0],txBuff[1],txBuff[2],txBuff[3],
             txBuff[4],txBuff[5],txBuff[6],txBuff[7]);
 //    qDebug() << endl;
     }
@@ -227,7 +227,7 @@ void Tp::Tp_RxChannelHandler(t_tpRxInfo &tpRxChannel)
     /* 打印结果.*/
 //    qDebug() << tpTxChannel.state;
     if (b_print_req) {
-    qDebug("%2x %2x %2x %2x %2x %2x %2x %2x\n", txBuff[0],txBuff[1],txBuff[2],txBuff[3],
+    qDebug("%2x %2x %2x %2x %2x %2x %2x %2x", txBuff[0],txBuff[1],txBuff[2],txBuff[3],
             txBuff[4],txBuff[5],txBuff[6],txBuff[7]);
 //    qDebug() << endl;
     }

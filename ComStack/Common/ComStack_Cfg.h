@@ -66,14 +66,14 @@ extern "C"{
 *          Allowed ranges: uint8 .. uint16
 * @implements DBASE02001
 */
-typedef uint8       PduIdType;
+typedef uint16       PduIdType;
 
 /** 
 * @brief   This type serve as length information of a PDU in bytes.
 *          Allowed ranges: uint8 .. uint32 
 * @implements DBASE02002
 */
-typedef uint8       PduLengthType;
+typedef uint32      PduLengthType;
 
 /*==================================================================================================
 *                                 GLOBAL VARIABLE DECLARATIONS

@@ -12,6 +12,7 @@ class Com : public QObject
     Q_OBJECT
 public:
     explicit    Com(QObject *parent = nullptr);
+    ~Com();
     void        stopCom();
 
 signals:
