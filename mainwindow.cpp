@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     this->traceWidget = new trace();
     ui->gridLayout_trace->addWidget(this->traceWidget);
+    ui->gridLayout4fileAdd->addWidget(new fileAddition());
 
     this->tickTimer = new QTimer;
 //    connect(this->tickTimer, SIGNAL(timeout()), this->traceWidget, SLOT(on_RxTxMessage()));

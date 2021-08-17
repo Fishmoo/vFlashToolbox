@@ -15,6 +15,12 @@ public:
     explicit fileAddition(QWidget *parent = nullptr);
     ~fileAddition();
 
+public slots:
+    void on_toolBtn_add();
+    void on_toolBtn_rm();
+    void on_toolBtn_up();
+    void on_toolBtn_down();
+
 private:
     Ui::fileAddition *ui;
 };
