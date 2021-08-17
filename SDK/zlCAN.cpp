@@ -131,6 +131,8 @@ lldStatus zlCAN::connect()
         }
 
         m_isOnline = true;  /* the device is opened.*/
+
+        _startPoint = std::chrono::steady_clock::now();
         opResult = LLD_E_OK;
     } while (0);
 
@@ -193,12 +195,24 @@ void zlCAN::run()
 
     while (m_isOnline) {
         CAN_Transmit(canId, &pdu);
+        /* CAN message write.*/
         if (!pTxMailbox->isEmpty()) {
             hth = pTxMailbox->dequeue();
             (void)pTransmit(mDevType, mDevIdx, 0, &hth, 1);
+//            auto time_us = time_point_cast<microseconds>(system_clock::now());
+//            auto end   = system_clock::now();
+//            auto time_us_ = duration_cast<microseconds>(end);
+//            time_point <system_clock,duration<int>> tp_seconds (duration<int>(1000));
+//            system_clock::time_point tp (tp_seconds);
+//            std::chrono::steady_clock whichClock =
+            const auto current_frame = std::chrono::steady_clock::now();
+//            hth.TimeStamp = time_us.time_since_epoch().count();
+            std::chrono::duration<double> diff = (current_frame - _startPoint);
+            qDebug() << "us: " <<  diff.count() << " s";
             TxConvertion(static_cast<void *>(&hth), 1);
         }
 
+        /* CAN receive polling.*/
         const int frameRxd = pReceive(mDevType, mDevIdx, 0, mHrh4Rxd, 1000, 0);
         if (frameRxd > 0) {
             RxConvertion(static_cast<void *>(mHrh4Rxd), frameRxd);

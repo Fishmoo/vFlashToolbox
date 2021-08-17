@@ -8,6 +8,9 @@
 #include <QThread>
 #include "msg.h"
 #include <QQueue>
+#include <chrono>
+
+using namespace std::chrono;
 
 /**
  * @brief lldStatus
@@ -113,6 +116,8 @@ protected:
 
     QQueue<meassage>    *m_pMsgRxQueue;
     QQueue<meassage>    *m_pMsgTxQueue;
+
+    time_point<steady_clock> _startPoint;
 public:
     enSimuCmdType       m_cmdRequested;
     enSimuOpStsType     m_simuOpState;

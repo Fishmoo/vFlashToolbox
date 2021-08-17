@@ -68,13 +68,12 @@ void trace::on_RxTxMessage(QQueue<meassage> *pMsgQue)
     meassage msg;
     while (!pMsgQue->isEmpty()) {
         msg = pMsgQue->dequeue();
-        //todo: 条件测试用
         item.Id   = msg.Id;
         item.Dlc  = msg.length;
         item.time = msg.timeStamp;
         item.Dir  = (msg.dir == meassage::DIR_TX) ? "Tx" : "Rx";
         memcpy(item.msgData, msg.data, msg.length);
-        createItemsARow(currentRow, &item);
+        createItemsARow(currentRow, &item);             //todo: 长时间会导致程序crash
         mTrace->append(msg);
     }
     //todo: test code to be delete!
@@ -84,22 +83,25 @@ void trace::on_RxTxMessage(QQueue<meassage> *pMsgQue)
 #endif
 }
 
-//void trace::on_RxTxMessage()
-//{
-//    traceItemType item;
-//    createItemsARow(currentRow, &item);
-//}
+void trace::on_RxTxMessage()
+{
+    traceItemType item;
+    createItemsARow(currentRow, &item);
+}
 
 void trace::on_ClearMessage()
 {
     this->totalRow = 0;
     this->currentRow = 0;
-    /* ui->tableWidget->clearContents();*/
+
+#if (0)
     int rowIdx = this->ui->tableWidget->rowCount();
     while (rowIdx-- > 0) {
         removeItemsARow(rowIdx);
     }
-
+#else
+    this->ui->tableWidget->clearContents();
+#endif
     /* Clear the buffer of the trace.*/
     mTrace->clear();
 }

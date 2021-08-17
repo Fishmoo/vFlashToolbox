@@ -22,6 +22,7 @@ SOURCES += \
     ComStack/Tp/tp.cpp \
     SDK/simulator.cpp \
     SDK/zlCAN.cpp \
+    fileAddition.cpp \
     main.cpp \
     mainwindow.cpp \
     msg.cpp \
@@ -41,11 +42,13 @@ HEADERS += \
     SDK/simulator.h \
     SDK/usb_can/ControlCAN.h \
     SDK/zlCAN.h \
+    fileAddition.h \
     mainwindow.h \
     msg.h \
     trace.h
 
 FORMS += \
+    fileAddition.ui \
     mainwindow.ui \
     trace.ui
 

@@ -33,10 +33,15 @@ MainWindow::MainWindow(QWidget *parent)
     this->traceWidget->moveToThread(mTraceThread);
     connect(mTraceThread, &QThread::finished, this->traceWidget, &trace::deleteLater);
     connect(mTraceThread, &QThread::finished, mTraceThread, &QObject::deleteLater);
+#if (1) //todo: for test trace tabel widget
+    void (trace::*on_RxTxMessage)() = &trace::on_RxTxMessage;
+#else
+    void (trace::*on_RxTxMessage)(QQueue<meassage> *pMsgQue) = &trace::on_RxTxMessage;
+#endif
     connect(pComM->m_pSimulator, &zlCAN::RxIndication,
-                this->traceWidget, &trace::on_RxTxMessage);
+                this->traceWidget, on_RxTxMessage);
     connect(pComM->m_pSimulator, &zlCAN::TxConfirmation,
-                this->traceWidget, &trace::on_RxTxMessage);
+                this->traceWidget, on_RxTxMessage);
 
     /* 启动线程.*/
     mTraceThread->start();

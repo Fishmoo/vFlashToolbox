@@ -44,7 +44,7 @@ public slots:
     void on_toolBtn_control();
     void on_toolBtn_scroll();
     void on_ClearMessage();
-//    void on_RxTxMessage();      //for test
+    void on_RxTxMessage();      //for test
     void on_RxTxMessage(QQueue<meassage> *pMsgQue);
 
 
