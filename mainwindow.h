@@ -30,6 +30,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    fileAddition   *uiFileAdd;
 
     trace   *traceWidget;
     QThread *mTraceThread;

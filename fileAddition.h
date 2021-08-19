@@ -2,6 +2,10 @@
 #define FILEADDITION_H
 
 #include <QWidget>
+#include <QFile>
+#include <QUrl>
+#include <QList>
+#include <QFileDialog>
 
 namespace Ui {
 class fileAddition;
@@ -23,6 +27,9 @@ public slots:
 
 private:
     Ui::fileAddition *ui;
+    QList<QUrl>      *mFileUrls;
+    void createItemsARow(const QUrl &fileUrl);
+    void removeItemsARow(const int selectRow);
 };
 
 #endif // FILEADDITION_H
