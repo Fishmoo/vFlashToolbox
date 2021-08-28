@@ -50,7 +50,7 @@ typedef struct
     uint8   Sn;                 /* for FlowFrame.*/
     uint8   Bs;                 /* BlockSize.*/
     uint8   counter4Bs;
-    uint8   CAN_DL;              /* DLC --> CAN_DL.*/
+    uint16   CAN_DL;              /* DLC --> CAN_DL.*/
 } t_tpRxInfo;
 
 
@@ -64,7 +64,7 @@ public:
     typedef enum { TP_TX_DL_8BYTES, TP_TX_DL_} t_TxDLtype;
 
 public:
-    Tp(t_AddrFormatType addressingFormat);
+    Tp(t_AddrFormatType addressingFormat = TP_ADDR_NORMAL);
     virtual ~Tp();
 
     void Tp_RxMain(void);

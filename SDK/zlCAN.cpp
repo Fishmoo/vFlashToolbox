@@ -31,6 +31,7 @@ zlCAN::zlCAN(): simulator("./lib/ControlCAN"),
     pTxMailbox = new QQueue<VCI_CAN_OBJ>;
 
     //todo:
+    qDebug() << "Crate simulator - zlCAN.";
 }
 
 zlCAN::~zlCAN()
@@ -69,7 +70,7 @@ lldStatus zlCAN::loadDriver()
     if ((pSearchUsbDev   = (pVCI_FindUsbDevice2)m_pSimDll->resolve("VCI_FindUsbDevice2")) == nullptr)     NotFound = 13U;
 
     if (NotFound) {
-        qDebug("dll symbol resolve faild.");
+        qDebug("dll symbol resolve faild, %d", NotFound);
         return LLD_E_NOT_OK;
     } else {
         qDebug("All dll symbols resolve successfully.");

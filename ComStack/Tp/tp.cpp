@@ -2,7 +2,7 @@
 #include <QDebug>
 #include <algorithm>
 
-Tp::Tp(t_AddrFormatType addressingFormat = TP_ADDR_NORMAL)
+Tp::Tp(t_AddrFormatType addressingFormat)
 {
     /* from .ini/.xml import configuration.*/
 
@@ -37,7 +37,7 @@ void Tp::Tp_MainTask(void)
 void Tp::Tp_TxChannelHandler(t_tpTxInfo &tpTxChannel)
 {
     uint8 i = 0U, txBuff[8] = { 0u };
-    uint8 b_print_req = 1u;
+    uint8 b_print_req = 1U;
     /* For tx channel.*/
     switch (tpTxChannel.state)
     {
@@ -105,13 +105,13 @@ void Tp::Tp_TxChannelHandler(t_tpTxInfo &tpTxChannel)
         break;
 
     default:
-        b_print_req = 0u;
+        b_print_req = 0U;
         break;
     }
 
     /* 打印结果.*/
 //    qDebug() << tpTxChannel.state;
-    if (b_print_req) {
+    if (b_print_req != 0U) {
     qDebug("%2x %2x %2x %2x %2x %2x %2x %2x", txBuff[0],txBuff[1],txBuff[2],txBuff[3],
             txBuff[4],txBuff[5],txBuff[6],txBuff[7]);
 //    qDebug() << endl;

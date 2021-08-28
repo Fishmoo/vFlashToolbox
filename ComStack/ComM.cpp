@@ -21,13 +21,15 @@ ComM::~ComM()
 #endif
 }
 
+/****************[public members - interface]***********************************************************/
 
+/****************[public members - slots]***************************************************************/
 /**
  * @brief ComM::on_ComControl
  * 接收UI控制信号, 控制硬件以及通信协议;
  * @param isActiveCom
  */
-void ComM::on_ComControl(bool isActiveCom)
+void ComM::on_ComControl(const bool isActiveCom)
 {
     if (isActiveCom) {
         qDebug("ComM::on_ComControl - Active!!!");
@@ -62,7 +64,7 @@ void ComM::on_SimuControl(const bool isStart)
     }
 }
 
-
+/****************[private members - interface]**********************************************************/
 /**
  * @brief ComM::createComThread
  * 创建线程.
@@ -70,6 +72,7 @@ void ComM::on_SimuControl(const bool isStart)
 void ComM::createComThread()
 {
     if (!m_pComWorker) {
+        qDebug() << "On ComM entry - create com thread!";
         /* 创建Com,并转移到新线程.*/
         m_pComWorker = new Com(nullptr);
         m_pComWorker->moveToThread(&m_ComThread);
@@ -82,6 +85,7 @@ void ComM::createComThread()
 
         /* 启动线程.*/
         m_ComThread.start();
+        qDebug() << "On ComM exit - create com thread!";
     }
 }
 
@@ -95,7 +99,7 @@ void ComM::createComThread()
 void ComM::destroyComThread()
 {
     if (!m_ComThread.isFinished()) {
-        qDebug("Destroy the Com thread!!!");
+        qDebug("On ComM - Destroy the Com thread!!!");
         /* 停止线程并等待线程释放完毕.*/
         m_ComThread.quit();
         m_ComThread.wait();

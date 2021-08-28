@@ -29,7 +29,7 @@ public:
 
 public slots:
     /* 接收UI控制信号.*/
-    void on_ComControl(bool isActiveCom);
+    void on_ComControl(const bool isActiveCom);
 //    void on_startFlashing();
 
 //    void on_SimuConfig();

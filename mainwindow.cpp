@@ -26,13 +26,6 @@ MainWindow::MainWindow(QWidget *parent)
     this->pComM = new ComM();
     connect(this, &MainWindow::ComControl,
             this->pComM, &ComM::on_ComControl);
-//    connect(pComM->m_pSimulator, &zlCAN::RxIndication,
-//            this->traceWidget, &trace::on_RxTxMessage);
-
-    mTraceThread = new QThread();
-    this->traceWidget->moveToThread(mTraceThread);
-    connect(mTraceThread, &QThread::finished, this->traceWidget, &trace::deleteLater);
-    connect(mTraceThread, &QThread::finished, mTraceThread, &QObject::deleteLater);
 #if (1) //todo: for test trace tabel widget
     void (trace::*on_RxTxMessage)() = &trace::on_RxTxMessage;
 #else
@@ -43,14 +36,27 @@ MainWindow::MainWindow(QWidget *parent)
     connect(pComM->m_pSimulator, &zlCAN::TxConfirmation,
                 this->traceWidget, on_RxTxMessage);
 
-    /* 启动线程.*/
+#if (0) //todo: 刷新线程暂定!!!
+    mTraceThread = new QThread(nullptr);
+    this->traceWidget->moveToThread(mTraceThread);
+    connect(mTraceThread, &QThread::finished, this->traceWidget, &trace::deleteLater);
+    /* 如果工作线程分配到堆上, 自杀QThread线程用.*/
+    connect(mTraceThread, &QThread::finished, mTraceThread, &QObject::deleteLater);
+    /* 启动刷新线程.*/
     mTraceThread->start();
+#endif
 }
 
 MainWindow::~MainWindow()
 {
-    mTraceThread->quit();
-    mTraceThread->wait();
+#if (0) //todo: 刷新线程暂定!!!
+    if (!mTraceThread->isFinished()) {
+        qDebug("On MainWindow - Destroy the Com thread!!!");
+        /* 停止线程并等待线程释放完毕.*/
+        mTraceThread->quit();
+        mTraceThread->wait();
+    }
+#endif
     delete ui;
 }
 
