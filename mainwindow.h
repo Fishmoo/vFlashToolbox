@@ -7,6 +7,7 @@
 #include "./SDK/simulator.h"
 #include "ComStack/ComM.h"
 #include <QThread>
+#include "fileAddition.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -29,6 +30,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    fileAddition   *uiFileAdd;
 
     trace   *traceWidget;
     QThread *mTraceThread;
