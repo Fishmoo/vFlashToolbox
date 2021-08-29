@@ -6,6 +6,9 @@
 #include <QUrl>
 #include <QList>
 #include <QFileDialog>
+#include <QTableWidgetItem>
+
+#define __SYSTEM_DEFAULT_FILE_QICON
 
 namespace Ui {
 class fileAddition;
@@ -30,11 +33,11 @@ private:
     Ui::fileAddition *ui;
     QList<QUrl>      *mFileUrls;
     qint8             mFileNo;
+    QList<QTableWidgetItem *> _itemsSelected;
     int             _selectFileRow;
 
     void  createItemsARow(const QUrl &fileUrl, const int whichRow);
     void  removeItemsARow(const int selectRow);
-//    QIcon getFileIcon(QString file_name);
 };
 
 #endif // FILEADDITION_H

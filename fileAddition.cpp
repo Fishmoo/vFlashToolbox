@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QFileIconProvider>
+#include <QAbstractItemView>
 
 fileAddition::fileAddition(QWidget *parent) :
     QWidget(parent)
@@ -16,7 +17,7 @@ fileAddition::fileAddition(QWidget *parent) :
     connect(ui->btnRemove, &QToolButton::pressed, this, &fileAddition::on_toolBtn_rm);
     connect(ui->btnUp,     &QToolButton::pressed, this, &fileAddition::on_toolBtn_up);
     connect(ui->btnDown,   &QToolButton::pressed, this, &fileAddition::on_toolBtn_down);
-//    connect(ui->tableWidget, &QTableWidget::)
+    connect(ui->tableWidget, &QTableWidget::itemSelectionChanged, this, &fileAddition::on_ItemCellSelected);
 
     /* 设置列表头*/
     ui->tableWidget->verticalHeader()->setVisible(false);
@@ -44,6 +45,10 @@ fileAddition::fileAddition(QWidget *parent) :
 //        headerItem->setSizeHint(itemSize);
         ui->tableWidget->setHorizontalHeaderItem(i, headerItem); //设置表头单元格的Item
     }
+
+    ui->tableWidget->setSelectionBehavior(QAbstractItemView::SelectionBehavior::SelectRows);
+
+    _itemsSelected.clear();
 }
 
 fileAddition::~fileAddition()
@@ -82,6 +87,10 @@ void fileAddition::on_toolBtn_add()
 void fileAddition::on_toolBtn_rm()
 {
     qDebug() << "ToolButton remove pressed!";
+    while (!_itemsSelected.isEmpty()) {
+        ui->tableWidget->removeRow(_itemsSelected.takeFirst()->row());
+    }
+    ui->btnRemove->setEnabled(false);
 }
 
 void fileAddition::on_toolBtn_up()
@@ -96,14 +105,22 @@ void fileAddition::on_toolBtn_down()
 
 void fileAddition::on_ItemCellSelected()
 {
-    qDebug() << "ItemCellSelected!";
+    QList<QTableWidgetItem *> itemsSelected = ui->tableWidget->selectedItems();
+    _itemsSelected.clear();
+    if (!itemsSelected.isEmpty()) {
+        qDebug() << "Item Cell Selected!" << itemsSelected.at(0)->row() << itemsSelected.count();
+        ui->btnRemove->setEnabled(true);
+        ui->btnRemove->setIcon(QIcon(":/file/Resources/file/cut.png"));
+        _itemsSelected.append(itemsSelected);
+    } else {
+        qDebug() << "No Item Cell selected!";
+    }
 }
 
 /****************[private members]**********************************************************************/
 void fileAddition::createItemsARow(const QUrl &fileUrl, const int whichRow)
 {
 #if (1)
-    QTableWidget *tableWdg = ui->tableWidget;
     QTableWidgetItem* p_item;
 
     //todo: 没有选择则是最后一行, 否则为选择的后一行
@@ -123,7 +140,7 @@ void fileAddition::createItemsARow(const QUrl &fileUrl, const int whichRow)
     font.setPointSize(6);           //字体大小
     p_item->setFont(font);          //设置字体
 
-#ifndef __SYSTEM_DEFAULT_FILE_QICON
+#ifdef __SYSTEM_DEFAULT_FILE_QICON
     QFileInfo fileInfo(QFile(fileUrl.fileName()));
     QFileIconProvider provider;
     ui->tableWidget->setItem(currentRow, 1,
@@ -158,28 +175,3 @@ void fileAddition::removeItemsARow(const int selectRow)
     ui->tableWidget->removeRow(row);
 #endif
 }
-
-//QIcon fileAddition::getFileIcon(const QFile& file_name)
-//{
-//    QIcon icon = QIcon(":/file/Resources/file/File.png");
-//    QFileIconProvider icon_provider;
-//    QTemporaryFile tmp_file(QDir::tempPath() + QDir::separator() +
-//    QCoreApplication::applicationName() + "_XXXXXX" + file_name.e);
-//    tmp_file.setAutoRemove(false);
-
-//    if(tmp_file.open())
-//    {
-//    QString file_name = tmp_file.fileName();
-//    tmp_file.write(QByteArray());
-//    tmp_file.close();
-
-//    icon = icon_provider.icon(QFileInfo(file_name));
-//    tmp_file.remove();
-//    }
-//    else
-//    {
-//    qCritical()<<QString("failed to write temporary file %1") .arg(tmp_file.fileName());
-//    }
-
-//    return icon;
-//}
