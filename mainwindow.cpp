@@ -8,6 +8,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , uiFileAdd(new fileAddition)
     , isRunning(false)
     , isComActived(false)
 {
@@ -15,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     this->traceWidget = new trace();
     ui->gridLayout_trace->addWidget(this->traceWidget);
-//    ui->gridLayout4fileAdd->addWidget(new fileAddition());
+    ui->gridLayout4fileAdd->addWidget(uiFileAdd);
 
     this->tickTimer = new QTimer;
 //    connect(this->tickTimer, SIGNAL(timeout()), this->traceWidget, SLOT(on_RxTxMessage()));
@@ -59,6 +60,7 @@ MainWindow::~MainWindow()
     }
 #endif
     delete ui;
+    delete uiFileAdd;
 }
 
 /****************[public members - slots]***************************************************************/

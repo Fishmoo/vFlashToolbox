@@ -24,12 +24,17 @@ public slots:
     void on_toolBtn_rm();
     void on_toolBtn_up();
     void on_toolBtn_down();
+    void on_ItemCellSelected();
 
 private:
     Ui::fileAddition *ui;
     QList<QUrl>      *mFileUrls;
-    void createItemsARow(const QUrl &fileUrl);
-    void removeItemsARow(const int selectRow);
+    qint8             mFileNo;
+    int             _selectFileRow;
+
+    void  createItemsARow(const QUrl &fileUrl, const int whichRow);
+    void  removeItemsARow(const int selectRow);
+//    QIcon getFileIcon(QString file_name);
 };
 
 #endif // FILEADDITION_H

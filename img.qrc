@@ -25,5 +25,6 @@
         <file>Resources/file/down_inactive.png</file>
         <file>Resources/file/up.png</file>
         <file>Resources/file/up_inactive.png</file>
+        <file>Resources/file/File.png</file>
     </qresource>
 </RCC>
